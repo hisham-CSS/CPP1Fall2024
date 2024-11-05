@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shoot : MonoBehaviour
 {
     SpriteRenderer sr;
-    
+
     public Vector2 initalShotVelocity = Vector2.zero;
 
     public Transform spawnPointRight;
@@ -26,6 +26,9 @@ public class Shoot : MonoBehaviour
 
         if (!spawnPointLeft || !spawnPointRight || !projectilePrefab)
             Debug.Log($"Please set default values on the shoot script for {gameObject.name}");
+
+        //initalShotVelocityLeft = initalShotVelocity;
+        //initalShotVelocityLeft.x *= -1;
     }
 
     public void Fire()
@@ -33,12 +36,13 @@ public class Shoot : MonoBehaviour
         if (!sr.flipX)
         {
             Projectile curProjectile = Instantiate(projectilePrefab, spawnPointRight.position, spawnPointRight.rotation);
-            curProjectile.SetVelocity(initalShotVelocity);
+            
+            curProjectile.SetVelocity(new Vector2(initalShotVelocity.x, initalShotVelocity.y));
         }
         else
         {
             Projectile curProjectile = Instantiate(projectilePrefab, spawnPointLeft.position, spawnPointLeft.rotation);
-            curProjectile.SetVelocity(initalShotVelocity);
+            curProjectile.SetVelocity(new Vector2(-initalShotVelocity.x, initalShotVelocity.y));
         }
     }
 }

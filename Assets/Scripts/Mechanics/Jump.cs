@@ -8,7 +8,7 @@ public class Jump : MonoBehaviour
     Rigidbody2D rb;
     PlayerController pc;
 
-    [SerializeField, Range(2, 5)] private float jumpHeight = 5;
+    [SerializeField, Range(2, 15)] private float jumpHeight = 5;
     [SerializeField, Range(1, 20)] private float jumpFallForce = 50;
 
     float timeHeld;
@@ -52,5 +52,18 @@ public class Jump : MonoBehaviour
         }
 
         if (jumpCancelled) rb.AddForce(Vector2.down * jumpFallForce);
+    }
+
+    public IEnumerator JumpHeightChange()
+    {
+        jumpHeight = jumpHeight * 2;
+        Debug.Log($"Jump Height Buffed: {jumpHeight}");
+        calculatedJumpForce = Mathf.Sqrt(jumpHeight * -2 * (Physics2D.gravity.y * rb.gravityScale));
+
+        yield return new WaitForSeconds(5);
+
+        jumpHeight = jumpHeight / 2;
+        Debug.Log($"Jump Height Nerfed: {jumpHeight}");
+        calculatedJumpForce = Mathf.Sqrt(jumpHeight * -2 * (Physics2D.gravity.y * rb.gravityScale));
     }
 }

@@ -7,6 +7,41 @@ using UnityEngine;
 [RequireComponent(typeof(GroundCheck), typeof(Jump), typeof(Shoot))]
 public class PlayerController : MonoBehaviour
 {
+    private int _lives;
+    public int lives 
+    {
+        get => _lives;
+        set
+        {
+            //do valid checking
+            if (value > 0)
+            { //gameover should be called here
+            }
+
+            if (_lives > value)
+            {
+                //respawn
+            }
+
+            _lives = value;
+            Debug.Log($"{_lives} lives left");
+        }
+    }
+
+    private int _score;
+    public int score
+    {
+        get => _score;
+        set
+        {
+            //this can't happen - the score can't be lower than zero so stop this from setting the score
+            if (value > 0) return;
+
+            _score = value;
+            Debug.Log($"Current Score: {_score}");
+        }
+    }
+
     //Component References
     Rigidbody2D rb;
     SpriteRenderer sr;
@@ -66,5 +101,19 @@ public class PlayerController : MonoBehaviour
             if (rb.velocity.y <= 0) isGrounded = gc.IsGrounded();
         }
         else isGrounded = gc.IsGrounded();
+    }
+
+    public void JumpPowerup()
+    {
+        StartCoroutine(GetComponent<Jump>().JumpHeightChange());
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        IPickup curPickup = collision.GetComponent<IPickup>();
+        if (curPickup != null)
+        {
+            curPickup.Pickup(gameObject);
+        }
     }
 }
