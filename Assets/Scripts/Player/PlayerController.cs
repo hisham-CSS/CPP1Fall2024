@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
     [Range(3, 10)]
     public float speed = 5.5f;
     [Range(3, 10)]
-    public float jumpForce = 3f;
+    public float bounceForce = 10;
 
     public bool isGrounded = false;
     // Start is called before the first frame update
@@ -110,6 +110,14 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.CompareTag("Squish"))
+        {
+            collision.enabled = false;
+            collision.gameObject.GetComponentInParent<Enemy>().TakeDamage(9999);
+            rb.velocity = Vector2.zero;
+            rb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
+        }
+
         IPickup curPickup = collision.GetComponent<IPickup>();
         if (curPickup != null)
         {

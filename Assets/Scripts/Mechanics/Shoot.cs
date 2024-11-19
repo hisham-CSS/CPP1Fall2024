@@ -26,9 +26,6 @@ public class Shoot : MonoBehaviour
 
         if (!spawnPointLeft || !spawnPointRight || !projectilePrefab)
             Debug.Log($"Please set default values on the shoot script for {gameObject.name}");
-
-        //initalShotVelocityLeft = initalShotVelocity;
-        //initalShotVelocityLeft.x *= -1;
     }
 
     public void Fire()
