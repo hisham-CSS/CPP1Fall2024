@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.Events;
+
 
 [DefaultExecutionOrder(-1)]
 public class GameManager : MonoBehaviour
 {
+    [HideInInspector] public UnityEvent<int> OnLifeValueChanged;
     private static GameManager _instance;
     public static GameManager Instance => _instance;
-
 
     //GAME PROPERTIES
     [SerializeField] private int maxLives = 5;
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
         get => _lives;
         set
         {
+            
             //do valid checking
             if (value < 0) 
             {
@@ -29,6 +31,7 @@ public class GameManager : MonoBehaviour
 
             _lives = value;
             Debug.Log($"{_lives} lives left");
+            OnLifeValueChanged?.Invoke(_lives);
         }
     }
     private int _score;
@@ -69,18 +72,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         if (maxLives <= 0) maxLives = 5;
-
-        _lives = maxLives;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            string sceneName = (SceneManager.GetActiveScene().name == "Level") ? "MainMenu" : "Level";
-            SceneManager.LoadScene(sceneName);
-        }
+        lives = maxLives;
     }
 
     void GameOver()
