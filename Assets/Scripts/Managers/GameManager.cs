@@ -1,13 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Events;
 
 
 [DefaultExecutionOrder(-1)]
 public class GameManager : MonoBehaviour
 {
-    [HideInInspector] public UnityEvent<int> OnLifeValueChanged;
+    public AudioMixerGroup SFXGroup;
+    public AudioMixerGroup MusicGroup;
+
+    [HideInInspector] public Action<int> OnLifeValueChanged;
     private static GameManager _instance;
     public static GameManager Instance => _instance;
 
@@ -56,6 +61,10 @@ public class GameManager : MonoBehaviour
     //Player Controller information
 
     private Transform currentCheckpoint;
+    
+    [HideInInspector]
+    public MenuController currentMenuController;
+
 
     void Awake()
     {
@@ -96,5 +105,13 @@ public class GameManager : MonoBehaviour
     {
         currentCheckpoint = updatedCheckpoint;
         Debug.Log("Checkpoint updated");
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            currentMenuController.SetActiveState(MenuController.MenuStates.Pause);
+        }
     }
 }

@@ -12,6 +12,10 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer sr;
     Animator anim;
     GroundCheck gc;
+    public AudioSource audioSource { get; private set; }
+
+    public AudioClip stompSound;
+    
 
     //Movement variables
     [Range(3, 10)]
@@ -27,11 +31,16 @@ public class PlayerController : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         gc = GetComponent<GroundCheck>();
+        audioSource = GetComponent<AudioSource>();
+
+        audioSource.outputAudioMixerGroup = GameManager.Instance.SFXGroup;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Time.timeScale <= 0) return;
+
         AnimatorClipInfo[] curPlayingClips = anim.GetCurrentAnimatorClipInfo(0);
         CheckIsGrounded();
         float hInput = Input.GetAxis("Horizontal");
@@ -81,6 +90,7 @@ public class PlayerController : MonoBehaviour
             collision.gameObject.GetComponentInParent<Enemy>().TakeDamage(9999);
             rb.velocity = Vector2.zero;
             rb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
+            audioSource.PlayOneShot(stompSound);
         }
 
         IPickup curPickup = collision.GetComponent<IPickup>();
